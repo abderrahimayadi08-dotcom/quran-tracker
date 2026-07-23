@@ -23,7 +23,7 @@ export function hizbFromCumAyah(cum) {
   for (let i = HIZB_CUM_AYAT.length - 1; i >= 0; i--) {
     if (cum >= HIZB_CUM_AYAT[i]) {
       return i + (cum - HIZB_CUM_AYAT[i]) / (
-        (i < HIZB_CUM_AYAT.length - 1 ? HIZB_CUM_AYAT[i + 1] : 6237) - HIZB_CUM_AYAT[i]
+        (i < HIZB_CUM_AYAT.length - 1 ? HIZB_CUM_AYAT[i + 1] : 6349) - HIZB_CUM_AYAT[i]
       );
     }
   }
@@ -157,5 +157,5 @@ export function getQuranProgress(readings) {
   const pos = getLastPosition(readings);
   if (!pos) return 0;
   const cum = cumAyah(pos.surah, pos.ayah);
-  return cum / 6236;
+  return cum / 6348;
 }
