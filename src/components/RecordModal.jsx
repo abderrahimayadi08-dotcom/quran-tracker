@@ -151,11 +151,11 @@ export default function RecordModal({ onClose, editDate }) {
         </div>
 
         <div className="hizb-preview">
-          {isZero ? '0 حزب' : `${formatHizb(hizb)} حزب`}
+          {isZero ? '0 حزب' : formatHizb(hizb)}
         </div>
 
         {!isZero && (
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textAlign: 'center', marginBottom: 12 }}>
+          <div className="hizb-range">
             من {surahAyahStr(startSurah, startAyah)} إلى {surahAyahStr(endSurah, endAyah)}
           </div>
         )}

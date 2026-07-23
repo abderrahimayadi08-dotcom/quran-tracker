@@ -11,10 +11,10 @@ export default function App() {
       {page === 'settings' && <SettingsPage onBack={() => setPage('home')} />}
       <nav className="nav">
         <button className={`nav-btn ${page === 'home' ? 'active' : ''}`} onClick={() => setPage('home')}>
-          <span>🏠</span> الرئيسية
+          <span className="nav-icon">🏠</span> الرئيسية
         </button>
         <button className={`nav-btn ${page === 'settings' ? 'active' : ''}`} onClick={() => setPage('settings')}>
-          <span>⚙️</span> الإعدادات
+          <span className="nav-icon">⚙️</span> الإعدادات
         </button>
       </nav>
     </Provider>

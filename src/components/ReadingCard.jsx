@@ -5,8 +5,8 @@ export default function ReadingCard({ reading, target, onEdit, onDelete }) {
   const statusClass = diff > 0 ? 'over' : diff < 0 ? 'short' : 'done';
   const statusText = reading.isZero
     ? 'لم يُقرأ شيء'
-    : diff > 0 ? `قرأت ${formatHizb(diff)} حزب إضافية`
-    : diff < 0 ? `بقي ${formatHizb(Math.abs(diff))} حزب`
+    : diff > 0 ? `قراءة فوق وردك: ${formatHizb(diff)}`
+    : diff < 0 ? `تبقى على تمام وردك: ${formatHizb(Math.abs(diff))}`
     : 'تم الورد بالكامل';
 
   return (
@@ -17,7 +17,7 @@ export default function ReadingCard({ reading, target, onEdit, onDelete }) {
       </div>
       <div className="reading-card-info">
         <div className={`reading-card-hizb ${statusClass}`}>
-          {reading.isZero ? '0 حزب' : `${formatHizb(reading.hizb)} حزب`}
+          {reading.isZero ? '0 حزب' : formatHizb(reading.hizb)}
         </div>
         <div className="reading-card-detail">{statusText}</div>
         {!reading.isZero && (

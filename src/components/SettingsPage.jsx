@@ -48,7 +48,7 @@ export default function SettingsPage({ onBack }) {
   }
 
   return (
-    <div style={{ marginBottom: 80 }}>
+    <div className="settings-page">
       <div className="settings-group">
         <label className="settings-label">معدل الورد اليومي (حزب)</label>
         <div style={{ display: 'flex', gap: 8 }}>

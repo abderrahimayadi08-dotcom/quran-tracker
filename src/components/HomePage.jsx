@@ -5,6 +5,29 @@ import Chart from './Chart';
 import RecordModal from './RecordModal';
 import ReadingCard from './ReadingCard';
 
+function ProgressRing({ value, target }) {
+  const pct = Math.min(value / target, 1.5);
+  const circumference = 2 * Math.PI * 65;
+  const offset = circumference * (1 - Math.min(pct, 1));
+  const over = value >= target;
+  return (
+    <div className="hero-ring">
+      <svg viewBox="0 0 140 140">
+        <circle className="hero-ring-bg" cx="70" cy="70" r="65" />
+        <circle
+          className={`hero-ring-fill ${over ? 'over' : ''}`}
+          cx="70" cy="70" r="65"
+          style={{ strokeDashoffset: offset }}
+        />
+      </svg>
+      <div className="hero-ring-center">
+        <div className="hero-number">{formatHizb(value)}</div>
+        <div className="hero-label">{formatHizb(target)} / يوم</div>
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage({ onSettings }) {
   const { state, dispatch } = useStore();
   const { readings, settings } = state;
@@ -15,6 +38,10 @@ export default function HomePage({ onSettings }) {
   const [showModal, setShowModal] = useState(false);
   const [chartMode, setChartMode] = useState('daily');
   const [editingDate, setEditingDate] = useState(null);
+
+  const todayKey = todayStr();
+  const todayReading = readings[todayKey];
+  const todayHizb = todayReading ? (todayReading.isZero ? 0 : todayReading.hizb) : 0;
 
   const lastPos = getLastPosition(readings);
 
@@ -65,21 +92,18 @@ export default function HomePage({ onSettings }) {
     setEditingDate(null);
   }
 
-  const months = [];
-  for (let m = 1; m <= 12; m++) months.push(m);
-
   return (
     <div>
-      <div className="header">
-        <div className="header-label">آخر ورد مسجل</div>
+      <div className="hero">
+        <ProgressRing value={todayHizb} target={settings.targetHizb} />
         {lastPos ? (
-          <div className="header-position">{surahAyahStr(lastPos.surah, lastPos.ayah)}</div>
+          <div className="hero-position">{surahAyahStr(lastPos.surah, lastPos.ayah)}</div>
         ) : (
-          <div className="header-position-empty">لم تسجل أي ورد بعد</div>
+          <div className="hero-position-empty">لم تسجل أي ورد بعد</div>
         )}
       </div>
 
-      <div className="chart-container">
+      <div className="chart-card">
         <div className="chart-controls">
           <button className={`chart-btn ${chartMode === 'daily' ? 'active' : ''}`} onClick={() => setChartMode('daily')}>يومي</button>
           <button className={`chart-btn ${chartMode === 'monthly' ? 'active' : ''}`} onClick={() => setChartMode('monthly')}>شهري</button>
@@ -87,17 +111,17 @@ export default function HomePage({ onSettings }) {
 
         {chartMode === 'daily' && (
           <div className="year-nav">
-            <button className="year-nav-btn" onClick={() => { if (selectedMonth === 1) { setSelectedMonth(12); setSelectedYear(y => y - 1); } else setSelectedMonth(m => m - 1); }}>◀</button>
-            <span className="year-label">{getMonthName(selectedMonth)} {selectedYear}</span>
             <button className="year-nav-btn" onClick={() => { if (selectedMonth === 12) { setSelectedMonth(1); setSelectedYear(y => y + 1); } else setSelectedMonth(m => m + 1); }}>▶</button>
+            <span className="year-label">{getMonthName(selectedMonth)} {selectedYear}</span>
+            <button className="year-nav-btn" onClick={() => { if (selectedMonth === 1) { setSelectedMonth(12); setSelectedYear(y => y - 1); } else setSelectedMonth(m => m - 1); }}>◀</button>
           </div>
         )}
 
         {chartMode === 'monthly' && (
           <div className="year-nav">
-            <button className="year-nav-btn" onClick={() => setSelectedYear(y => y - 1)}>◀</button>
-            <span className="year-label">{selectedYear}</span>
             <button className="year-nav-btn" onClick={() => setSelectedYear(y => y + 1)}>▶</button>
+            <span className="year-label">{selectedYear}</span>
+            <button className="year-nav-btn" onClick={() => setSelectedYear(y => y - 1)}>◀</button>
           </div>
         )}
 
@@ -108,8 +132,8 @@ export default function HomePage({ onSettings }) {
         <>
           <div className={`month-status ${monthStatus > 0 ? 'positive' : monthStatus < 0 ? 'negative' : monthReadings.length ? 'zero' : 'empty'}`}>
             {monthReadings.length === 0 ? 'لا يوجد ورد مسجل' :
-              monthStatus > 0 ? `تم +%${formatHizb(monthStatus)}` :
-              monthStatus < 0 ? `بقي ${formatHizb(Math.abs(monthStatus))} حزب` :
+              monthStatus > 0 ? `قراءة فوق وردك: ${formatHizb(monthStatus)}` :
+              monthStatus < 0 ? `تبقى على تمام وردك: ${formatHizb(Math.abs(monthStatus))}` :
               'تم الورد بالكامل'}
           </div>
 

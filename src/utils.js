@@ -30,23 +30,42 @@ export function hizbFromCumAyah(cum) {
   return 0;
 }
 
+function snapHizb(n) {
+  if (n === 0) return 0;
+  const intPart = Math.floor(n);
+  const frac = n - intPart;
+  const eighths = Math.round(frac * 8);
+  return intPart + eighths / 8;
+}
+
 export function calculateHizb(s1, a1, s2, a2) {
   const start = cumAyah(s1, a1);
   const end = cumAyah(s2, a2);
   if (end <= start) return 0;
-  return hizbFromCumAyah(end) - hizbFromCumAyah(start);
+  return snapHizb(hizbFromCumAyah(end) - hizbFromCumAyah(start));
 }
 
 export function formatHizb(n) {
   if (n === 0) return '0';
   const intPart = Math.floor(n);
   const frac = n - intPart;
-  if (frac < 0.01) return String(intPart);
-  const quarters = Math.round(frac * 4);
-  if (quarters === 1) return `${intPart} ١/٤`;
-  if (quarters === 2) return `${intPart} ١/٢`;
-  if (quarters === 3) return `${intPart} ٣/٤`;
-  return n % 1 === 0 ? String(intPart) : n.toFixed(1);
+  function w(num) {
+    if (num === 0) return '';
+    if (num === 1) return 'حزب';
+    if (num === 2) return 'حزبان';
+    if (num >= 3 && num <= 10) return `${num} أحزاب`;
+    return `${num} حزب`;
+  }
+  if (frac < 0.01) return w(intPart);
+  const eighth = Math.round(frac * 8);
+  if (eighth === 0) return w(intPart);
+  const FRAC_LABELS = { 1: 'ثمن', 2: 'ربع', 3: 'ثلاثة أثمان', 4: 'نصف' };
+  if (eighth <= 4) {
+    return intPart === 0 ? `${FRAC_LABELS[eighth]} حزب` : `${w(intPart)} و${FRAC_LABELS[eighth]}`;
+  }
+  const up = intPart + 1;
+  const SUB = { 5: 'ثلاثة أثمان', 6: 'الربع', 7: 'الثمن' };
+  return `${w(up)} إلا ${SUB[eighth]}`;
 }
 
 export function surahAyahStr(surah, ayah) {
@@ -66,6 +85,7 @@ export function getMonthReadings(readings, year, month) {
   return Object.keys(readings)
     .filter(d => d.startsWith(prefix))
     .sort()
+    .reverse()
     .map(d => ({ date: d, ...readings[d] }));
 }
 
@@ -99,8 +119,8 @@ export function getMonthlyChartData(readings, year, target) {
     const status = getMonthlyStatus(readings, year, m, target);
     data.push({
       month: m,
-      name: ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'][m],
+      name: ['', 'جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان',
+        'جويلية', 'أوت', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'][m],
       status,
       target: 0
     });
@@ -129,6 +149,13 @@ export function getDayName(dateStr) {
 }
 
 export function getMonthName(m) {
-  return ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-    'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'][m];
+  return ['', 'جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان',
+    'جويلية', 'أوت', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'][m];
+}
+
+export function getQuranProgress(readings) {
+  const pos = getLastPosition(readings);
+  if (!pos) return 0;
+  const cum = cumAyah(pos.surah, pos.ayah);
+  return cum / 6236;
 }
