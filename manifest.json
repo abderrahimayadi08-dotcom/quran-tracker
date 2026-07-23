@@ -1,0 +1,14 @@
+{
+  "name": "مُتابع الورد",
+  "short_name": "الورد",
+  "description": "تطبيق متابعة قراءة القرآن اليومية",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FAF8F4",
+  "theme_color": "#2A6B4F",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "./icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "./icons/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
