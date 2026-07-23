@@ -36,7 +36,7 @@ export default function Chart({ data, target, mode }) {
         />
         <YAxis tick={{ fontSize: 10, fill: '#82878C', fontFamily: "'Tajawal'" }} domain={[0, maxVal]} />
         <Tooltip formatter={(v) => [formatHizb(v), 'الورد']} {...tipStyle} />
-        <ReferenceLine y={target} stroke="#C0942A" strokeDasharray="4 2" label={{ value: 'المعدل', position: 'right', offset: 10, fontSize: 10, fill: '#C0942A', fontFamily: "'Tajawal'", fontWeight: 600 }} />
+        <ReferenceLine y={target} stroke="#C0942A" strokeDasharray="4 2" label={{ value: 'المعدل', position: 'top', offset: 6, fontSize: 10, fill: '#C0942A', fontFamily: "'Tajawal'", fontWeight: 600 }} />
         <Bar dataKey="hizb" radius={[6, 6, 0, 0]}>
           {data.map((entry, i) => (
             <Cell key={i} fill={entry.hizb >= target ? '#2A6B4F' : entry.hizb > 0 ? '#A63D40' : '#E6E2DB'} />
